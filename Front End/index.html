@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEI Knowledge Base</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div class="welcome-screen" id="welcomeScreen">
+            <svg class="welcome-icon icon-book" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="1.5">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+            </svg>
+            <h1 class="welcome-title">CEI Knowledge Base</h1>
+            <div class="example-cards">
+                <div class="example-card" data-question="Fine motor skill activities">
+                    Fine motor skill activities
+                </div>
+                <div class="example-card" data-question="How to handle biting in the classroom?">
+                    How to handle biting in the classroom?
+                </div>
+                <div class="example-card" data-question="Ideas for an environment project">
+                    Ideas for an environment project
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-area" id="chatArea"></div>
+    </div>
+
+    <!-- Input Bar -->
+    <div class="input-bar">
+        <div class="input-wrapper">
+            <textarea class="input-field" id="messageInput" placeholder="Ask the CEI assistant..." rows="1"></textarea>
+            <button class="send-button" id="sendButton">
+                <svg class="icon-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="19" x2="12" y2="5"></line>
+                    <polyline points="5 12 12 5 19 12"></polyline>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Custom Scripts -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>
