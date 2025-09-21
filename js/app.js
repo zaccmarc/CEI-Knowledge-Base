@@ -15,7 +15,7 @@ let state = {
 };
 
 // IMPORTANTE: Cole aqui a URL da sua API obtida no deploy do Wrangler
-const API_URL = 'https://api-novo-site.marcrepository.workers.dev';
+const API_URL = 'https://api-novo-site.marcrepository.workers.dev/';
 
 // ============================
 // Initialization
@@ -91,7 +91,8 @@ async function sendMessage() {
     // --- A MÁGICA ACONTECE AQUI ---
     // Substituímos a simulação pela chamada real à API
     try {
-        const response = await fetch(API_URL, {
+        // CORRETO
+        const response = await fetch(API_URL + 'api/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
