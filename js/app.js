@@ -1,3 +1,4 @@
+// ============================
 // Global Variables
 // ============================
 const elements = {
@@ -12,6 +13,9 @@ let state = {
     isFirstMessage: true,
     isTyping: false
 };
+
+// IMPORTANTE: Cole aqui a URL da sua API obtida no deploy do Wrangler
+const API_URL = 'https://api-novo-site.marcrepository.workers.dev/';
 
 // ============================
 // Initialization
@@ -30,14 +34,9 @@ function initializeElements() {
 }
 
 function attachEventListeners() {
-    // Input field events
     elements.messageInput.addEventListener('input', handleInputChange);
     elements.messageInput.addEventListener('keydown', handleKeyPress);
-
-    // Send button event
     elements.sendButton.addEventListener('click', sendMessage);
-
-    // Example cards events
     elements.exampleCards.forEach(card => {
         card.addEventListener('click', handleExampleClick);
     });
@@ -48,13 +47,9 @@ function attachEventListeners() {
 // ============================
 function handleInputChange(e) {
     const textarea = e.target;
-
-    // Auto-resize textarea
     textarea.style.height = 'auto';
     textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
-
-    // Toggle send button state
-    if (textarea.value.trim()) {
+    if (textarea.value.trim() && !state.isTyping) {
         elements.sendButton.classList.add('active');
     } else {
         elements.sendButton.classList.remove('active');
@@ -62,7 +57,6 @@ function handleInputChange(e) {
 }
 
 function handleKeyPress(e) {
-    // Send message on Enter (without Shift)
     if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         sendMessage();
@@ -79,30 +73,49 @@ function handleExampleClick(e) {
 // ============================
 // Message Functions
 // ============================
-function sendMessage() {
-    const message = elements.messageInput.value.trim();
-    if (!message || state.isTyping) return;
+async function sendMessage() {
+    const userMessage = elements.messageInput.value.trim();
+    if (!userMessage || state.isTyping) return;
 
-    // Hide welcome screen on first message
+    state.isTyping = true;
     if (state.isFirstMessage) {
         elements.welcomeScreen.classList.add('hidden');
         elements.chatArea.classList.add('active');
         state.isFirstMessage = false;
     }
 
-    // Add user message
-    addMessage(message, 'user');
-
-    // Clear input
+    addMessage(userMessage, 'user');
     clearInput();
+    addTypingIndicator(); // Adiciona o indicador de "digitando..."
 
-    // Simulate AI response
-    state.isTyping = true;
-    setTimeout(() => {
-        const response = generateAIResponse(message);
-        addMessage(response, 'assistant');
+    // --- A MÁGICA ACONTECE AQUI ---
+    // Substituímos a simulação pela chamada real à API
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: userMessage }),
+        });
+
+        removeTypingIndicator(); // Remove o indicador
+
+        if (!response.ok) {
+            throw new Error('A resposta da rede não foi bem-sucedida.');
+        }
+
+        const data = await response.json();
+        addMessage(data.reply, 'assistant');
+
+    } catch (error) {
+        console.error('Erro ao enviar mensagem:', error);
+        removeTypingIndicator(); // Garante que o indicador seja removido em caso de erro
+        addMessage('Desculpe, ocorreu um erro. Por favor, tente novamente mais tarde.', 'assistant');
+    } finally {
         state.isTyping = false;
-    }, 1000);
+        handleInputChange({ target: elements.messageInput }); // Reavalia o estado do botão de enviar
+    }
 }
 
 function addMessage(text, type) {
@@ -121,7 +134,9 @@ function createMessageElement(text, type) {
 
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content';
-    contentDiv.textContent = text;
+
+    // Converte o texto para HTML para renderizar quebras de linha e outras formatações
+    contentDiv.innerHTML = text.replace(/\n/g, '<br>');
 
     messageDiv.appendChild(iconDiv);
     messageDiv.appendChild(contentDiv);
@@ -142,6 +157,20 @@ function scrollToBottom() {
     elements.chatArea.scrollTop = elements.chatArea.scrollHeight;
 }
 
+function addTypingIndicator() {
+    const indicator = createMessageElement('...', 'assistant');
+    indicator.id = 'typing-indicator';
+    elements.chatArea.appendChild(indicator);
+    scrollToBottom();
+}
+
+function removeTypingIndicator() {
+    const indicator = document.getElementById('typing-indicator');
+    if (indicator) {
+        indicator.remove();
+    }
+}
+
 function getUserIcon() {
     return `
         <svg class="icon-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -159,28 +188,4 @@ function getAssistantIcon() {
             <path d="M2 12l10 5 10-5"/>
         </svg>
     `;
-}
-
-// ============================
-// AI Response Simulation
-// ============================
-function generateAIResponse(message) {
-    const responses = {
-        'fine motor': 'Here are some excellent fine motor skill activities for young children: threading beads, using play dough, practicing with safety scissors, finger painting, and building with small blocks. These activities help develop hand-eye coordination and prepare children for writing.',
-        'biting': 'When handling biting in the classroom: Stay calm, comfort the injured child first, then address the biter with firm but gentle words. Explain that biting hurts others, provide alternatives like words to express feelings, and closely supervise to prevent future incidents.',
-        'environment': 'Great environment project ideas include: creating a classroom garden, starting a recycling program, nature walks with collection bags, making bird feeders, and teaching about water conservation through hands-on activities. These help children connect with nature and understand sustainability.',
-        'default': 'I understand you\'re asking about teaching strategies for young children. Let me help you with specific information about early childhood education practices. What particular aspect would you like to explore?'
-    };
-
-    const lowerMessage = message.toLowerCase();
-
-    if (lowerMessage.includes('fine motor') || lowerMessage.includes('motor skill')) {
-        return responses['fine motor'];
-    } else if (lowerMessage.includes('biting') || lowerMessage.includes('bite')) {
-        return responses['biting'];
-    } else if (lowerMessage.includes('environment') || lowerMessage.includes('project')) {
-        return responses['environment'];
-    } else {
-        return responses['default'];
-    }
 }
