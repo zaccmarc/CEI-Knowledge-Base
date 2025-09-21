@@ -15,7 +15,7 @@ let state = {
 };
 
 // IMPORTANTE: Cole aqui a URL da sua API obtida no deploy do Wrangler
-const API_URL = 'https://api-novo-site.marcrepository.workers.dev/';
+const API_URL = 'https://api-novo-site.marcrepository.workers.dev';
 
 // ============================
 // Initialization
