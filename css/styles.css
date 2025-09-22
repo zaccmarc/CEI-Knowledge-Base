@@ -320,7 +320,3 @@ body {
 .hidden {
     display: none !important;
 }
-
-.active {
-    display: block !important;
-}
