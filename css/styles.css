@@ -96,6 +96,8 @@ body {
 .chat-area {
     flex: 1;
     overflow-y: auto;
+    min-height: 0;
+    /* <-- A MUDANÇA IMPORTANTE */
     padding: 24px 0 24px;
     display: none;
     scroll-behavior: smooth;
