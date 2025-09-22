@@ -14,6 +14,8 @@ let state = {
     isTyping: false
 };
 
+let conversationHistory = [];
+
 // IMPORTANTE: Cole aqui a URL da sua API obtida no deploy do Wrangler
 const API_URL = 'https://api-novo-site.marcrepository.workers.dev/';
 
@@ -94,7 +96,10 @@ async function sendMessage() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ message: userMessage }),
+            body: JSON.stringify({
+                message: userMessage,
+                history: conversationHistory.slice(0, -1) // Envia o histórico SEM a última mensagem do usuário
+            }),
         });
 
         removeTypingIndicator(); // <-- 2. ADICIONE ESTA LINHA
@@ -120,6 +125,9 @@ function addMessage(text, type) {
     const messageDiv = createMessageElement(text, type);
     elements.chatArea.appendChild(messageDiv);
     scrollToBottom();
+
+    // Adicione esta linha para salvar no histórico
+    conversationHistory.push({ role: type, content: text });
 }
 
 function createMessageElement(text, type) {
