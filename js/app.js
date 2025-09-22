@@ -86,12 +86,9 @@ async function sendMessage() {
 
     addMessage(userMessage, 'user');
     clearInput();
-    addTypingIndicator(); // Adiciona o indicador de "digitando..."
+    addTypingIndicator(); // <-- 1. ADICIONE ESTA LINHA
 
-    // --- A MÁGICA ACONTECE AQUI ---
-    // Substituímos a simulação pela chamada real à API
     try {
-        // CORRETO
         const response = await fetch(API_URL + 'api/chat', {
             method: 'POST',
             headers: {
@@ -100,7 +97,7 @@ async function sendMessage() {
             body: JSON.stringify({ message: userMessage }),
         });
 
-        removeTypingIndicator(); // Remove o indicador
+        removeTypingIndicator(); // <-- 2. ADICIONE ESTA LINHA
 
         if (!response.ok) {
             throw new Error('A resposta da rede não foi bem-sucedida.');
@@ -111,11 +108,11 @@ async function sendMessage() {
 
     } catch (error) {
         console.error('Erro ao enviar mensagem:', error);
-        removeTypingIndicator(); // Garante que o indicador seja removido em caso de erro
+        removeTypingIndicator(); // <-- 3. ADICIONE ESTA LINHA TAMBÉM
         addMessage('Desculpe, ocorreu um erro. Por favor, tente novamente mais tarde.', 'assistant');
     } finally {
         state.isTyping = false;
-        handleInputChange({ target: elements.messageInput }); // Reavalia o estado do botão de enviar
+        handleInputChange({ target: elements.messageInput });
     }
 }
 
@@ -184,9 +181,8 @@ function getUserIcon() {
 function getAssistantIcon() {
     return `
         <svg class="icon-ai" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-            <path d="M2 17l10 5 10-5"/>
-            <path d="M2 12l10 5 10-5"/>
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
         </svg>
     `;
 }
