@@ -13,10 +13,12 @@ body {
     color: #1D1D1F;
     height: 100vh;
     display: flex;
+    /* Mantém o flex */
     flex-direction: column;
-    overflow: hidden;
+    /* Mantém a direção */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* A mudança crucial está na remoção do 'overflow: hidden' que pode causar problemas */
 }
 
 /* ============================
@@ -24,12 +26,15 @@ body {
    ============================ */
 .container {
     flex: 1;
+    /* <-- ESSA É A REGRA MAIS IMPORTANTE */
     display: flex;
     flex-direction: column;
     max-width: 768px;
     width: 100%;
     margin: 0 auto;
     padding: 0 16px;
+    min-height: 0;
+    /* Adicionado para garantir que o flex funcione corretamente */
 }
 
 /* ============================
@@ -96,15 +101,18 @@ body {
 .chat-area {
     flex: 1;
     overflow-y: auto;
+    /* Adiciona a rolagem quando necessário */
     min-height: 0;
-    /* <-- A MUDANÇA IMPORTANTE */
-    padding: 24px 0 24px;
-    display: none;
+    /* Garante que a rolagem seja ativada corretamente */
+    padding: 24px 0;
     scroll-behavior: smooth;
 }
 
+/* Garante que o chat-area seja exibido */
 .chat-area.active {
-    display: block;
+    display: flex;
+    /* Mude de 'block' para 'flex' para consistência */
+    flex-direction: column;
 }
 
 /* ============================
