@@ -101,10 +101,9 @@ body {
 .chat-area {
     flex: 1;
     overflow-y: auto;
-    /* Adiciona a rolagem quando necessário */
     min-height: 0;
-    /* Garante que a rolagem seja ativada corretamente */
-    padding: 24px 0;
+    padding: 24px 10px;
+    /* ANTES: padding: 24px 0; */
     scroll-behavior: smooth;
 }
 
@@ -273,24 +272,41 @@ body {
     }
 }
 
+/* cei-ai-project/css/styles.css */
+
 /* ============================
-   Scrollbar Styling
+   Scrollbar Styling (Estilo Refinado)
    ============================ */
+
+/* Para navegadores baseados em WebKit (Chrome, Safari, Edge) */
 .chat-area::-webkit-scrollbar {
     width: 6px;
+    /* Largura da barra */
 }
 
 .chat-area::-webkit-scrollbar-track {
     background: transparent;
+    /* Fundo da trilha transparente */
 }
 
 .chat-area::-webkit-scrollbar-thumb {
-    background: #E5E5E7;
-    border-radius: 3px;
+    background-color: #C7C7CC;
+    /* Cor da barra */
+    border-radius: 10px;
+    /* Bordas arredondadas */
+    border: 2px solid #FFFFFF;
+    /* Cria um espaçamento falso usando a cor do fundo */
 }
 
 .chat-area::-webkit-scrollbar-thumb:hover {
-    background: #C7C7CC;
+    background-color: #8E8E93;
+    /* Cor ao passar o mouse */
+}
+
+/* Para Firefox */
+.chat-area {
+    scrollbar-width: thin;
+    scrollbar-color: #C7C7CC #FFFFFF;
 }
 
 /* ============================
